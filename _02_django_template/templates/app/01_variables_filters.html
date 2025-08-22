@@ -1,0 +1,52 @@
+{# django template 한줄 주석 #}
+
+{% comment %}
+여러줄 주석
+여러줄 주석
+
+Django Template의 모든 표현식은 server단에서 처리후, 순수 html만 응답메세지로 출력된다.
+{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Django Template | Variable/Filters</title>
+</head>
+<body>
+  <h1>Variable/Filters</h1>
+  
+  <h2>Variable</h2>
+  <p>My name is {{ name }}.</p>
+  <p>I am {{ age }} years old.</p>
+  <p>{{users.0.id}} {{users.0.name}}</p>
+
+  <h2>Filter</h2>
+  {# Filter는 변수에 대한 후처리를 담당한다. #}
+  {# variable|filter #}
+  {# variable|filter:args #}
+  <p>My name is {{ name|upper }}</p>
+  <p>I am {{ age|add:1 }} years old.</p>
+  {# filter인자에 변수사용, 연속 filter 적용 가능 #}
+  <p>I am {{ age|add:num|add:5 }} years old.</p> 
+
+  <p>Today is {{ today }}</p>
+  <p>Today is {{ today|date:"Y/m/d (D) A h:i:s" }}</p>
+
+  {# now tag #}
+  {# https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#now #}
+  <p>{% now "Y년 F d일 H:i:s" %}</p>
+
+  <h2>Variable Declaration</h2>
+  {% now "Y" as current_year %}
+  <p>올해는 {{ current_year }}년 입니다.</p>
+
+  {# with 블럭을 통해 변수 선언 가능 #}
+  {% with username='gogd' x=1234 %}
+  <p>{{ username }}님, 반갑습니다. 회원번호는 {{ x }}번 입니다.</p>
+  {% endwith %}
+  {# with블럭을 벗어나면 해당 변수는 사용할 수 없다. (오류 나지 않고, 아무것도 출력 안됨) #}
+  <p>{{ username }}님, 반갑습니다. 회원번호는 {{ x }}번 입니다.</p>
+
+</body>
+</html>

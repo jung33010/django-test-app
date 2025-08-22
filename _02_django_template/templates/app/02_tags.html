@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Django Template | Tags</title>
+  <style>
+  table {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+  </style>
+</head>
+<body>
+  <h1>Tags</h1>
+  
+  <h2>조건문</h2>
+  {% if age >= 20 %}
+    <p>당신은 성인입니다.</p>
+  {% elif age >= 10 %}
+    <p>당신은 청소년입니다.</p>
+  {% else %}
+    <p>당신은 어린이입니다.</p>
+  {% endif %}
+
+  {% if is_authenticated %}
+    <p>Welcome, {{ name }}</p>
+  {% else %}
+    <p>Please, log in.</p>
+  {% endif %}
+
+  <h2>반복문</h2>
+  <ul>
+    {% for fruit in fruits %}
+      <li>{{ fruit }}{% if forloop.first %}♥️{% endif %} </li>
+    {% endfor %}
+  </ul>
+
+  {% comment %} 
+  `forloop` 변수: 반복문 상태 확인 가능
+  - forloop.counter: 루프의 현재 반복 횟수를 1부터 센다 (1-indexed)
+  - forloop.counter0: 루프의 현재 반복 횟수를 0부터 센다 (0-indexed)
+  - forloop.revcounter: 루프 끝에서부터 몇 번째 반복인지 1부터 센다 (1-indexed)
+  - forloop.revcounter0: 루프 끝에서부터 몇 번째 반복인지 0부터 센다 (0-indexed)
+  - forloop.first: 현재 반복이 첫 번째일 때 `True`
+  - forloop.last: 현재 반복이 마지막일 때 `True`
+  - forloop.parentloop: 중첩된 for문 내에서 바로 상위 루프를 참조할 때 사용
+  {% endcomment %}
+
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>아이디</th>
+        <th>이름</th>
+        <th>나이</th>
+        <th>결혼여부</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ forloop.counter }}</td> {# counter: 1부터, counter0: 0부터 #}
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.age }}</td>
+          <td>
+            <input 
+              type="checkbox" 
+              id="married{{ forloop.counter0 }}"
+              onclick="return false;"
+              {% if user.married %}checked{% endif %} />
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <th colspan="5">조회된 회원이 없습니다.</th>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+
+
+</body>
+</html>

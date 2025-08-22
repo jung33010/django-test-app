@@ -1,0 +1,18 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Django Template | staticfiles</title>
+  <link rel="stylesheet" href="{% static 'css/global.css' %}">
+</head>
+<body>
+  <h1>staticfiles</h1>
+  <img src="{% static 'images/cat.jpg' %}" alt="">
+
+
+  <script src="{% static 'js/global.js' %}"></script>
+</body>
+</html>
