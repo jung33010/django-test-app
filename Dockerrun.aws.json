@@ -6,7 +6,7 @@
       "image": "dreamwars99/django-cicd-app:latest",
       "essential": true,
       "memory": 512,
-      "portMappings": [{"hostPort": 8080, "containerPort": 8080}],
+      "portMappings": [{"hostPort": 8000, "containerPort": 8000}],
       "environment": [
         {"name": "SECRET_KEY", "value": "your_secret_key"},
         {"name": "DJANGO_SETTINGS_MODULE", "value": "KB_FinAIssist.settings"}
