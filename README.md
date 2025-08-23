@@ -1,2 +1,2 @@
-# django-test-app
-django/ci/cd test
+# SKN14-Final-3Team-Web
+Repository for SKN14-Final-3Team-Web
