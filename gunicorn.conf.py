@@ -6,7 +6,7 @@ workers = multiprocessing.cpu_count() * 2 + 1
 print('workers =', workers)
 
 # bind 주소/포트
-bind = '0.0.0.0:8080'
+bind = '0.0.0.0:8000'
 
 # worker_class 기본값:sync(동기워커)
 worker_class = 'uvicorn.workers.UvicornWorker'
