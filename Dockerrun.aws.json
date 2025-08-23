@@ -1,20 +1,19 @@
 {
-  "AWSEBDockerrunVersion": "1",
-  "Image": {
-    "Name": "dreamwars99/django-cicd-app:latest",
-    "Update": "true"
-  },
-  "Ports": [
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
     {
-      "ContainerPort": 8080,
-      "HostPort": 8080
+      "name": "django-app",
+      "image": "dreamwars99/django-cicd-app:latest",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [{"hostPort": 8080, "containerPort": 8080}],
+      "environment": [
+        {"name": "DATABASE_HOST", "value": "your_db_host"},
+        {"name": "DATABASE_USER", "value": "your_db_user"},
+        {"name": "DATABASE_PASSWORD", "value": "your_db_password"},
+        {"name": "SECRET_KEY", "value": "your_secret_key"},
+        {"name": "DJANGO_SETTINGS_MODULE", "value": "KB_FinAIssist.settings"}
+      ]
     }
-  ],
-  "Environment": {
-    "DATABASE_HOST": "$DATABASE_HOST",
-    "DATABASE_USER": "$DATABASE_USER",
-    "DATABASE_PASSWORD": "$DATABASE_PASSWORD"
-  },
-  "Volumes": [],
-  "Logging": "/var/log/nginx"
+  ]
 }
