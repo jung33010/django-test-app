@@ -20,4 +20,4 @@ COPY . .
 
 # Gunicorn으로 Django 실행
 ENTRYPOINT ["gunicorn", "-c", "gunicorn.conf.py"]
-EXPOSE 8080
+EXPOSE 8000
