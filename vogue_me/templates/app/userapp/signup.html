@@ -1,0 +1,158 @@
+{% extends "layout/base_content_only.html" %}
+
+{% load static %}
+
+{% block title %}Vogue Me || Sign Up{% endblock title %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static "userapp/css/login.css" %}">
+    <style>
+        .list-group { text-align:left; font-size:13px; }
+        .list-group .list-group-item { color:#c3c3c3; padding:0; border:unset; background-color:unset; }
+    </style>
+{% endblock style %}
+
+
+{% block content %}
+    <div class="login-container text-center">
+        <!-- 로고 이미지 -->
+        <img src="https://placehold.co/150x80/ccabd8/055b5c?text=Logo" alt="로고" class="logo-image">
+
+        <!-- 회원가입 폼 -->
+        <form action="/user/signup/" method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="email" class="form-control" name="email" placeholder="이메일" required>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="first_name" placeholder="이름" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="last_name" placeholder="성" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password1" placeholder="비밀번호" required>
+                <ul class="list-group" id="passwordRules">
+                    <li class="list-group-item" id="rule-lower">❓ 소문자 포함</li>
+                    <li class="list-group-item" id="rule-upper">❓ 대문자 포함</li>
+                    <li class="list-group-item" id="rule-number">❓ 숫자 포함</li>
+                    <li class="list-group-item" id="rule-special">❓ 특수기호 ! @ # $ % ^ & * ( ) 중 하나 이상 포함</li>
+                    <li class="list-group-item" id="rule-length">❓ 길이 8자 이상</li>
+                </ul>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password2" placeholder="비밀번호 확인" required>
+                <div class="invalid-feedback">
+                    입력하신 비밀번호와 다릅니다.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">회원가입</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        const _valid = ($ele, isValid) => {
+            let remover = isValid ? "is-invalid" : "is-valid";
+            let adder   = isValid ? "is-valid" : "is-invalid";
+            $ele.classList.remove(remover);
+            $ele.classList.add(adder);
+            return isValid;
+        };
+        (function() {
+            const $csrf  = document.getElementsByName("csrfmiddlewaretoken")[0];
+            const $email = document.getElementsByName("email")[0];
+            const $msg   = document.querySelector("input[name=email] + .invalid-feedback");
+            let timeout;
+            $email.addEventListener("input", (e) => {
+                clearTimeout(timeout);
+                e.target.classList.remove("is-valid", "is-invalid");
+
+                timeout = setTimeout(() => {
+                    if(! /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(e.target.value)) {
+                        _valid(e.target, false);
+                        $msg.innerText = "이메일 주소를 확인해주세요.";
+                        return;
+                    }
+
+                    fetch("{% url "userapp:check_email_dup" %}", {
+                        method : "POST",
+                        cache  : "no-cache",
+                        headers: { "Content-Type": "application/json", "X-CSRFToken": $csrf.value },
+                        body: JSON.stringify({ email : e.target.value })
+                    }).then(resp => { return resp.json();
+                    }).then(data => {
+                        const isDup = data["already_exist"];
+                        if( isDup ) $msg.innerText = "이미 가입된 계정입니다.";
+                        _valid(e.target, !isDup);
+                    })
+                }, 1000);
+            });
+            {% if form.email.errors %}
+                let errMsg = [
+                    {% for error in form.email.errors %}"{{ error }}",{% endfor %}
+                ];
+
+                $msg.innerText = errMsg.join("<br/>")
+                $email.classList.remove("is-valid")
+                $email.classList.add("is-invalid")
+            {% endif %}
+        })()
+    </script>
+    <script>
+        (function(){
+            const $rules = document.getElementById("passwordRules");
+            const $pw1   = document.getElementsByName("password1")[0];
+            let timeout1, timeout2;
+            $pw1.addEventListener("input", e => {
+                clearTimeout(timeout1);
+                timeout1 = setTimeout(() => {
+                    let all_passed = true;
+                    const value = e.target.value;
+                    const rules = {
+                        lower   : /[a-z]/,
+                        upper   : /[A-Z]/,
+                        number  : /[0-9]/,
+                        special : /[!@#$%^&*()]/,
+                        length  : /[a-zA-Z0-9!@#$%^&*()]{8,}/
+                    };
+
+                    for (const [key, regex] of Object.entries(rules)) {
+                        const element = document.getElementById(`rule-${key}`);
+                        if (regex.test(value)) {
+                            element.classList.remove("text-danger");
+                            element.classList.add("text-success");
+                            element.textContent = `✅ ${element.textContent.slice(2)}`;
+                        } else {
+                            element.classList.remove("text-success");
+                            element.classList.add("text-danger");
+                            element.textContent = `❌ ${element.textContent.slice(2)}`;
+                            all_passed = false;
+                        }
+                    }
+                    $rules.classList.toggle("d-none", all_passed);
+                    _valid($pw1, all_passed)
+                }, 500);
+            });
+            document.getElementsByName("password2")[0].addEventListener("input", e => {
+                clearTimeout(timeout2);
+                timeout2 = setTimeout(() => _valid(e.target, $pw1.value === e.target.value), 200);
+            });
+        })()
+    </script>
+    <script>
+        (function(){
+            let timeout1, timeout2;
+            document.getElementsByName("first_name")[0].addEventListener("input", e => {
+                clearTimeout(timeout1);
+                timeout1 = setTimeout(() => _valid(e.target, e.target.value.length > 0), 500);
+            });
+            document.getElementsByName("last_name")[0].addEventListener("input", e => {
+                clearTimeout(timeout2);
+                timeout2 = setTimeout(() => _valid(e.target, e.target.value.length > 0), 500);
+            });
+        })()
+    </script>
+{% endblock script %}

@@ -1,0 +1,88 @@
+body {
+    padding-bottom: 5rem;
+}
+
+/* 페이지 제목 */
+.page-title {
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+/* 선택지 패널 */
+.selection-panel {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    max-width:980px;
+}
+
+/* 이미지 버튼 스타일 */
+.image-button {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    padding-top: 100%; /* 1:1 비율 유지 */
+    border-radius: 0.75rem;
+    border: 3px solid #ccc; /* 비선택 상태 테두리 */
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+.image-button img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+/* 선택된 버튼 스타일 */
+.image-button.selected {
+    border: 3px solid transparent;
+    background: linear-gradient(to right, #ccabd8, #8474a1) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+/* 다음 버튼 스타일 */
+.next-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+}
+
+.next-button .btn {
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #888;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.next-button .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.next-button .btn.active {
+    background: linear-gradient(90deg, #6ec6ca, #08979d);
+    border: none;
+    color: white;
+}

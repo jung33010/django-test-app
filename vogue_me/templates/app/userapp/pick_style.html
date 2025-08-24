@@ -1,0 +1,88 @@
+{% extends "layout/base_content_only.html" %}
+
+{% load static %}
+
+{% block title %}Vogue Me || Pick your style!{% endblock title %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static "userapp/css/pick_style.css" %}">
+{% endblock style %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- 페이지 제목 -->
+        <h1 class="page-title">선호하는 스타일을 고르세요!</h1>
+
+        <!-- 선택지 패널 -->
+        <div class="selection-panel mb-5">
+            <!-- 12개의 이미지 버튼 -->
+            <div class="image-button" data-id="1"><img src="https://placehold.co/200x200/ccabd8/white?text=중후한" alt="중후한 스타일"></div>
+            <div class="image-button" data-id="2"><img src="https://placehold.co/200x200/8474a1/white?text=댄디한" alt="댄디한 스타일"></div>
+            <div class="image-button" data-id="3"><img src="https://placehold.co/200x200/6ec6ca/white?text=섹시한" alt="섹시한 스타일"></div>
+            <div class="image-button" data-id="4"><img src="https://placehold.co/200x200/08979d/white?text=클래식" alt="클래식 스타일"></div>
+            <div class="image-button" data-id="5"><img src="https://placehold.co/200x200/055b5c/white?text=발랄한" alt="발랄한 스타일"></div>
+            <div class="image-button" data-id="6"><img src="https://placehold.co/200x200/ccabd8/white?text=상큼한" alt="상큼한 스타일"></div>
+            <div class="image-button" data-id="7"><img src="https://placehold.co/200x200/8474a1/white?text=두꺼운" alt="두꺼운 스타일"></div>
+            <div class="image-button" data-id="8"><img src="https://placehold.co/200x200/6ec6ca/white?text=고어한" alt="고어한 스타일"></div>
+            <div class="image-button" data-id="9"><img src="https://placehold.co/200x200/08979d/white?text=우아한" alt="우아한 스타일"></div>
+            <div class="image-button" data-id="10"><img src="https://placehold.co/200x200/055b5c/white?text=야비한" alt="야비한 스타일"></div>
+            <div class="image-button" data-id="11"><img src="https://placehold.co/200x200/ccabd8/white?text=처참한" alt="처참한 스타일"></div>
+            <div class="image-button" data-id="12"><img src="https://placehold.co/200x200/8474a1/white?text=꾸안꾸" alt="꾸안꾸 스타일"></div>
+        </div>
+    </div>
+
+    <!-- 하단 고정 "다음" 버튼 -->
+    <div class="next-button">
+        <button class="btn w-100" id="nextButton" disabled>다음 <span id="countSpan">(0/5)</span></button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageButtons = document.querySelectorAll('.image-button');
+            const nextButton   = document.getElementById('nextButton');
+            const $countSpan   = document.getElementById("countSpan");
+            const requiredSelections = 5;
+            const minimunSelections  = 3;
+            let selectedCount = 0;
+
+            // 각 이미지 버튼에 클릭 이벤트 리스너 추가
+            imageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const isSelected = this.classList.contains('selected');
+
+                    if (isSelected) {
+                        this.classList.remove('selected');
+                        selectedCount--;
+                    } else {
+                        if (selectedCount < requiredSelections) {
+                            this.classList.add('selected');
+                            selectedCount++;
+                        }
+                    }
+                    $countSpan.innerText = `(${selectedCount}/5)`;
+                    updateNextButtonState();
+                });
+            });
+
+            // "다음" 버튼 상태 업데이트 함수
+            function updateNextButtonState() {
+                if (selectedCount >= minimunSelections) {
+                    nextButton.disabled = false;
+                    nextButton.classList.add('active');
+                } else {
+                    nextButton.disabled = true;
+                    nextButton.classList.remove('active');
+                }
+            }
+
+            nextButton.addEventListener("click", function() {
+                //TODO 선택한 스타일 정보들을 가지고 다음 페이지로 넘어가는 로직 필요
+                // 우선은 임시로 페이지이동만.
+                location.href = "{% url "userapp:make_avatar" %}";
+            });
+        });
+    </script>
+{% endblock script %}

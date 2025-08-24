@@ -1,0 +1,107 @@
+{% extends "layout/base_content_only.html" %}
+
+{% load static %}
+
+{% block title %}Vogue Me || Make your Avatar!{% endblock title %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static "userapp/css/make_avatar.css" %}">
+{% endblock style %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- 페이지 제목 -->
+        <h1 class="page-title">당신을 닮은 아바타를 만들어보세요!</h1>
+
+        <!-- 업로드 패널 -->
+        <div class="upload-panel">
+            <div class="upload-button-container">
+                <input type="file" id="imageInput1" class="file-input" accept="image/*">
+                <label for="imageInput1" class="custom-upload-label"></label>
+            </div>
+            <div class="upload-button-container">
+                <input type="file" id="imageInput2" class="file-input" accept="image/*">
+                <label for="imageInput2" class="custom-upload-label"></label>
+            </div>
+            <div class="upload-button-container">
+                <input type="file" id="imageInput3" class="file-input" accept="image/*">
+                <label for="imageInput3" class="custom-upload-label"></label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 하단 고정 "다음" 버튼 -->
+    <div class="next-button">
+        <button class="btn w-100" id="nextButton" disabled>다음</button>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM 요소 가져오기
+            const imageInputs = document.querySelectorAll('.file-input');
+            const uploadLabels = document.querySelectorAll('.custom-upload-label');
+            const nextButton = document.getElementById('nextButton');
+            const requiredImages = 3;
+
+            // 각 파일 입력 필드에 이벤트 리스너 추가
+            imageInputs.forEach((input, index) => {
+                input.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const label = uploadLabels[index];
+                        // 파일 유효성 검사 (이미지 타입 및 용량)
+                        const isImage = file.type.startsWith('image/');
+                        const isSmallEnough = file.size <= 2 * 1024 * 1024; // 2MB 제한
+
+                        if (isImage && isSmallEnough) {
+                            // 미리보기 이미지 생성 및 표시
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                label.style.backgroundImage = `url(${e.target.result})`;
+                                label.classList.add('has-image');
+                                updateNextButtonState();
+                            };
+                            reader.readAsDataURL(file);
+                        } else {
+                            // 유효하지 않은 파일일 경우
+                            alert('유효하지 않은 파일입니다. 이미지 파일(2MB 이하)을 선택해주세요.');
+                            label.style.backgroundImage = '';
+                            label.classList.remove('has-image');
+                            event.target.value = null; // 파일 선택 초기화
+                            updateNextButtonState();
+                        }
+                    }
+                });
+            });
+
+            // "다음" 버튼 상태 업데이트 함수
+            function updateNextButtonState() {
+                let uploadedCount = 0;
+                imageInputs.forEach(input => {
+                    if (input.files.length > 0) {
+                        uploadedCount++;
+                    }
+                });
+
+                if (uploadedCount === requiredImages) {
+                    nextButton.disabled = false;
+                    nextButton.classList.add('active');
+                } else {
+                    nextButton.disabled = true;
+                    nextButton.classList.remove('active');
+                }
+            }
+
+            // "다음" 버튼 클릭 이벤트 리스너 (예시)
+            nextButton.addEventListener('click', function() {
+                if (!this.disabled) {
+                    alert("아바타 만들고 다음 페이지로 고고씽 해야 함.");
+                    //TODO API 사용해서 페이지 넘어가지 않고, 아바타가 생성되기 전까지 Loading 추가 해야 함.
+                }
+            });
+        });
+    </script>
+{% endblock script %}
