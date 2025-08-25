@@ -133,3 +133,11 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# settings.py
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "django-app-env.eba-canrvitu.ap-northeast-2.elasticbeanstalk.com",
+]
